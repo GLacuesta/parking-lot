@@ -11,21 +11,20 @@ In the project directory, you can run:
 Runs the app in the development mode.
 
 ### `npm test`
-Shallow test and component test
+No testing - too shallow to test
 
 ### `npm run build`
-Feel free to buil
+Feel free to buil (but not recommended since the app and its context is too small)
 
 ### `npm run eject`
 N / A
 
-## CORS ISSUE
-Installed in chrome as a workaround https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf/related?hl=en
+### `No store`
+No store (redux) or and complex state for context api to use.
 
-Allow CORS: Access-Control-Allow-Origin
-Offered by: Muyor
-
+### `No endpoints`
+No endpoints required
 
 ### Code Splitting
-Async HOC
+Async HOC - removed (not needed)
 
