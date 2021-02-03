@@ -55,6 +55,7 @@ const ParkingContent = props => {
   }
 
   const parkHandler = () => {
+    if (!available) return;
     if (plateNumber && color) {
       const plateNumberExists = parkingTable.findIndex(slot => slot.plateNumber.toLowerCase() === plateNumber.toLocaleLowerCase());
       if (plateNumberExists > -1) {
@@ -100,6 +101,9 @@ const ParkingContent = props => {
     }
     setColorError(null);
     setPlateNumberError(null);
+    setColor('');
+    setPlateNumber('');
+    setSearch('')
   }
 
   const searchHandler = value => {
@@ -114,6 +118,7 @@ const ParkingContent = props => {
     setSearch(value);
   }
 
+  const freeSlots = () => JSON.stringify((parkingTable.filter(i => i.isAvailable)).map(i => i.id));
 
   return (
     <div className={classes.root}>
@@ -128,6 +133,11 @@ const ParkingContent = props => {
                 if (isEmpty(value)) {
                   setParkSizeError(null);
                   setParkSize(null);
+                  setColor('');
+                  setPlateNumber('');
+                  setSearch('');
+                  setParkingTable([]);
+                  setSearchableParkingTable([]);
                 }
                 if (value) {
                   const isRealNumber = !isNaN(value);
@@ -171,7 +181,7 @@ const ParkingContent = props => {
               value={plateNumber}
               error={!!plateNumberError}
               helperText={plateNumberError}
-              disabled={!available}
+              disabled={!parkSize && !available}
             />
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -182,7 +192,7 @@ const ParkingContent = props => {
               value={color}
               error={!!colorError}
               helperText={colorError}
-              disabled={!parkSize}
+              disabled={!parkSize && !available}
             />
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -191,7 +201,7 @@ const ParkingContent = props => {
               color="primary"
               variant="contained"
               onClick={parkHandler}
-              disabled={!parkSize}
+              disabled={!parkSize && !available}
             >
               Park
             </CustomButton>
@@ -199,7 +209,11 @@ const ParkingContent = props => {
           <Grid item xs={12} sm={6} />
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}><h4>Available slot: {available}</h4></Grid>
+          <Grid item xs={12} sm={4}>
+            <h3>
+              Available slots: {available} <span style={{color: 'green'}}>{!!available && `(Free slot number: ${freeSlots()})`}</span>
+            </h3>
+          </Grid>
           <Grid item xs={12} sm={4} />
           <Grid item xs={12} sm={4}>
             <Searchbox 
