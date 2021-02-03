@@ -1,0 +1,31 @@
+.parkingHeader {
+  width: 95%;
+  margin: 10px auto;
+  box-sizing: border-box;
+  border: 1px solid #b3b3b3;
+  border-radius: 7px;
+  box-shadow: 4px 4px #b3b3b3;
+  padding: 10px auto;
+  background-color: #dcdcdc;
+}
+
+.title {
+  margin: 5px auto;
+  text-align: center;
+  align-items: center
+}
+
+.title hr {
+  width: 95%;
+  background-color: black;
+}
+
+.content {
+  width: 95%;
+  margin: 10px auto;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: center;
+  padding-bottom: 50px;
+  background-color: #dcdcdc;
+}
