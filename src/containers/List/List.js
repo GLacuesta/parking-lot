@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,6 +28,14 @@ const CustomTable = props => {
     )
   }
 
+  if (!props?.searchableParkingTable.length) {
+    return (
+      <div style={{textAlign: 'center', fontSize: 50}}>
+        <span style={{fontSize: 25}}>No matching record!</span>
+      </div>
+    )
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table}>
@@ -40,7 +48,7 @@ const CustomTable = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props?.parkingTable?.map((row) => (
+          {props?.searchableParkingTable?.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center" component="th" scope="row">
                 {row.id}

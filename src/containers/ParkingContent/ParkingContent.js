@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { isEmpty, set } from 'lodash';
+import React, { useState } from 'react';
+import { isEmpty } from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -7,11 +7,9 @@ import Textbox from '../../components/Textbox';
 import Searchbox from '../../components/Searchbox';
 import CustomButton from '../../components/Button';
 import CustomTable from '../List/List';
-import { updateObject } from '../../shared/utility';
 
-const generateParkingLotModel 
-= (startingNumber, plateNumber, color) => 
-({id: startingNumber, plateNumber: plateNumber, color: color, isAvailable: true});
+const generateParkingLotModel = (startingNumber, plateNumber, color) => 
+  ({id: startingNumber, plateNumber: plateNumber, color: color, isAvailable: true});
 
 const useStyles = makeStyles((theme) => ({
   root: {
