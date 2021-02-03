@@ -34,15 +34,24 @@ const ParkingContent = props => {
   const classes = useStyles();
   const [parkSize, setParkSize] = useState(null);
   const [parkingTable, setParkingTable] = useState([]);
+  const [searchableParkingTable, setSearchableParkingTable] = useState([]);
   const [parkSizeError, setParkSizeError] = useState(null);
-  const [plateNumber, setPlateNumber] = useState(null);
+  const [plateNumber, setPlateNumber] = useState('');
   const [plateNumberError, setPlateNumberError] = useState(null);
-  const [color, setColor] = useState(null);
-  const [colorError, setErrorColor] = useState(null);
-  const [available, setAvailable] = useState(null);
+  const [color, setColor] = useState('');
+  const [colorError, setColorError] = useState(null);
+  const [available, setAvailable] = useState(0);
+  const [search, setSearch] = useState('');
 
-  const clearOutHandler = () => {
+  const clearOutHandler = ID => {
     const clone = JSON.parse(JSON.stringify(parkingTable)); // deep clone
+    const slotIndex = clone.findIndex(slot => slot.id === ID);
+    clone[slotIndex].plateNumber = '';
+    clone[slotIndex].color = '';
+    clone[slotIndex].isAvailable = true;
+    setParkingTable(clone);
+    setSearchableParkingTable(clone);
+    setSearch('');
     const result = clone.filter(i => i.isAvailable).length;
     setAvailable(result);
   }
@@ -51,14 +60,24 @@ const ParkingContent = props => {
     if (plateNumber && color) {
       const availableSlotIndex = parkingTable.findIndex(slot => slot.isAvailable);
       const clone = JSON.parse(JSON.stringify(parkingTable)); // deep clone
-      if (availableSlotIndex > 0) {
+      if (availableSlotIndex > -1) {
         clone[availableSlotIndex].plateNumber = plateNumber;
         clone[availableSlotIndex].color = color;
         clone[availableSlotIndex].isAvailable = false;
         setParkingTable(clone);
+        setSearchableParkingTable(clone);
         const result = clone.filter(i => i.isAvailable).length;
         setAvailable(result);
+      } else {
+        setAvailable(0);
       }
+      setColor('');
+      setPlateNumber('');
+      setPlateNumberError(null);
+      setColorError(null);
+    } else {
+      if (!plateNumber) setPlateNumberError('No plate number');
+      if (!color) setColorError('No car color');
     }
   }
 
@@ -69,8 +88,25 @@ const ParkingContent = props => {
         array.push(generateParkingLotModel(i, '', ''));
       }
       setParkingTable(array);
+      setSearchableParkingTable(array);
       setAvailable(parkSize);
+    } else {
+      setParkingTable([]);
+      setSearchableParkingTable([]);
+      setAvailable(0);
     }
+  }
+
+  const searchHandler = value => {
+    if (value) {
+      const filtered = parkingTable
+        .filter(item => item?.plateNumber?.toLowerCase()?.includes(value) 
+          || item?.color?.toLowerCase()?.includes(value));
+      setSearchableParkingTable(filtered);
+    } else {
+      setSearchableParkingTable(parkingTable);
+    }
+    setSearch(value);
   }
 
 
@@ -127,6 +163,10 @@ const ParkingContent = props => {
               fullWidth 
               label="Plate Number"
               onChange={event => setPlateNumber(event?.target?.value)}
+              value={plateNumber}
+              error={!!plateNumberError}
+              helperText={plateNumberError}
+              disabled={!available}
             />
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -134,6 +174,10 @@ const ParkingContent = props => {
               fullWidth 
               label="Colour"
               onChange={event => setColor(event?.target?.value)}
+              value={color}
+              error={!!colorError}
+              helperText={colorError}
+              disabled={!parkSize}
             />
           </Grid>
           <Grid item xs={12} sm={2}>
@@ -142,6 +186,7 @@ const ParkingContent = props => {
               color="primary"
               variant="contained"
               onClick={parkHandler}
+              disabled={!parkSize}
             >
               Park
             </CustomButton>
@@ -149,18 +194,25 @@ const ParkingContent = props => {
           <Grid item xs={12} sm={6} />
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}><h4>Available slot: </h4></Grid>
+          <Grid item xs={12} sm={4}><h4>Available slot: {available}</h4></Grid>
           <Grid item xs={12} sm={4} />
           <Grid item xs={12} sm={4}>
             <Searchbox 
               fullWidth 
               label="Search . . ."
+              onChange={event => searchHandler(event?.target?.value)}
+              value={search}
+              disabled={!parkSize}
             />
           </Grid>
         </Grid>
         <Grid container spacing={3} style={{paddingTop: 60}}>
           <Grid item xs={12}>
-            <CustomTable parkingTable={parkingTable?.filter(item => !item?.isAvailable)} />
+            <CustomTable 
+              parkingTable={parkingTable?.filter(item => !item?.isAvailable)}
+              searchableParkingTable={searchableParkingTable?.filter(item => !item?.isAvailable)}
+              clearOutHandler={clearOutHandler} 
+            />
           </Grid>
         </Grid>
       </Paper>

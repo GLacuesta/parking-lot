@@ -16,14 +16,6 @@ const useStyles = makeStyles({
   },
 });
 
-// var array = new Uint32Array(10);
-// window.crypto.getRandomValues(array);
-
-// console.log("Your lucky numbers:");
-// for (var i = 0; i < array.length; i++) {
-//   console.log(array[i]);
-// }
-
 const CustomTable = props => {
   const classes = useStyles();
   
@@ -55,7 +47,7 @@ const CustomTable = props => {
               </TableCell>
               <TableCell align="center">{row.plateNumber}</TableCell>
               <TableCell align="center">{row.color}</TableCell>
-              <TableCell align="center"><ClearIcon /></TableCell>
+              <TableCell align="center"><ClearIcon style={{ color: 'red', cursor: 'pointer'}} onClick={() => props.clearOutHandler(row.id)} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
