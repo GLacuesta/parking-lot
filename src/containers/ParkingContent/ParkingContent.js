@@ -56,6 +56,11 @@ const ParkingContent = props => {
 
   const parkHandler = () => {
     if (plateNumber && color) {
+      const plateNumberExists = parkingTable.findIndex(slot => slot.plateNumber.toLowerCase() === plateNumber.toLocaleLowerCase());
+      if (plateNumberExists > -1) {
+        setPlateNumberError('Car already parked!');
+        return;
+      }
       const availableSlotIndex = parkingTable.findIndex(slot => slot.isAvailable);
       const clone = JSON.parse(JSON.stringify(parkingTable)); // deep clone
       if (availableSlotIndex > -1) {
@@ -93,6 +98,8 @@ const ParkingContent = props => {
       setSearchableParkingTable([]);
       setAvailable(0);
     }
+    setColorError(null);
+    setPlateNumberError(null);
   }
 
   const searchHandler = value => {
